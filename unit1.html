@@ -77,88 +77,10 @@
             border-top: 2px solid #dfeaf5;
         }
 
-        .pdf-previews {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0 2rem;
-        }
-
-        .pdf-page {
-            width: 100%;
-            padding: 0;
-            border: 2px solid #dfeaf5;
-            border-radius: 6px;
-            background: white;
-            cursor: zoom-in;
-            box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .pdf-page:hover,
-        .pdf-page:focus {
-            transform: scale(1.02);
-            box-shadow: 0 4px 14px rgb(0 0 0 / 18%);
-        }
-
-        .pdf-page canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        .pdf-status {
-            color: #526579;
-            font-style: italic;
-        }
-
         .blog-section p {
             min-height: 80px;
             margin-bottom: 1.5rem;
             padding: 0.5rem 0;
-        }
-
-        .image-modal {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            inset: 0;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            background: rgb(0 0 0 / 80%);
-            cursor: zoom-out;
-        }
-
-        .image-modal.is-open {
-            display: flex;
-        }
-
-        .image-modal canvas {
-            max-width: 95vw;
-            max-height: 90vh;
-            width: auto;
-            height: auto;
-            background: white;
-            cursor: default;
-        }
-
-        .close-modal {
-            position: fixed;
-            top: 0.75rem;
-            right: 1.25rem;
-            border: 0;
-            background: transparent;
-            color: white;
-            font-size: 2.5rem;
-            line-height: 1;
-            cursor: pointer;
-        }
-
-        @media (max-width: 650px) {
-            .pdf-previews {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -179,86 +101,10 @@
 
         <section class="blog-section">
             <h3>Blog: Gen Z and Vapes</h3>
-            <p class="pdf-status" id="pdf-status">Loading scanned pages...</p>
-            <div class="pdf-previews" id="pdf-previews" aria-label="Scanned page previews"></div>
             <p></p>
             <p></p>
             <p></p>
         </section>
     </main>
-
-    <div class="image-modal" id="image-modal" role="dialog" aria-label="Enlarged scanned page" aria-modal="true">
-        <button class="close-modal" type="button" aria-label="Close enlarged image">&times;</button>
-        <canvas id="enlarged-page"></canvas>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        const pdfUrl = 'Adobe%20Scan%20Sep%2015,%202026%20(1).pdf';
-        const previews = document.querySelector('#pdf-previews');
-        const status = document.querySelector('#pdf-status');
-        const modal = document.querySelector('#image-modal');
-        const enlargedPage = document.querySelector('#enlarged-page');
-        const closeModal = document.querySelector('.close-modal');
-
-        pdfjsLib.GlobalWorkerOptions.workerSrc =
-            'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-        function showEnlargedPage(sourceCanvas) {
-            enlargedPage.width = sourceCanvas.width;
-            enlargedPage.height = sourceCanvas.height;
-            enlargedPage.getContext('2d').drawImage(sourceCanvas, 0, 0);
-            modal.classList.add('is-open');
-        }
-
-        function hideModal() {
-            modal.classList.remove('is-open');
-        }
-
-        async function renderPdfPages() {
-            try {
-                const pdf = await pdfjsLib.getDocument(pdfUrl).promise;
-
-                for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
-                    const page = await pdf.getPage(pageNumber);
-                    const viewport = page.getViewport({ scale: 1.4 });
-                    const button = document.createElement('button');
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-
-                    button.className = 'pdf-page';
-                    button.type = 'button';
-                    button.title = 'Click to enlarge page ' + pageNumber;
-                    button.setAttribute('aria-label', 'Enlarge scanned page ' + pageNumber);
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-                    button.appendChild(canvas);
-                    previews.appendChild(button);
-
-                    await page.render({ canvasContext: context, viewport }).promise;
-                    button.addEventListener('click', () => showEnlargedPage(canvas));
-                }
-
-                status.textContent = 'Click any scanned page to view it larger.';
-            } catch (error) {
-                status.textContent = 'The scanned pages could not be loaded. Use the PDF link below to open the file.';
-                const pdfLink = document.createElement('a');
-                pdfLink.href = pdfUrl;
-                pdfLink.textContent = 'Open Adobe Scan PDF';
-                pdfLink.target = '_blank';
-                previews.appendChild(pdfLink);
-            }
-        }
-
-        closeModal.addEventListener('click', hideModal);
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) hideModal();
-        });
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') hideModal();
-        });
-
-        renderPdfPages();
-    </script>
 </body>
 </html>
