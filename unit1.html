@@ -77,10 +77,47 @@
             border-top: 2px solid #dfeaf5;
         }
 
+        .image-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .image-row a {
+            display: block;
+            text-decoration: none;
+            border: 2px solid #dfeaf5;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 8px rgb(0 0 0 / 8%);
+        }
+
+        .image-row a:hover,
+        .image-row a:focus {
+            transform: scale(1.02);
+            box-shadow: 0 4px 14px rgb(0 0 0 / 15%);
+        }
+
+        .image-row img {
+            display: block;
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
+
         .blog-section p {
             min-height: 80px;
             margin-bottom: 1.5rem;
             padding: 0.5rem 0;
+        }
+
+        @media (max-width: 650px) {
+            .image-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -101,6 +138,16 @@
 
         <section class="blog-section">
             <h3>Blog: Gen Z and Vapes</h3>
+
+            <div class="image-row">
+                <a href="1790043173683-cf216fb1-dfd4-490a-8085-411b0ada3876_1.jpg" target="_blank" rel="noopener noreferrer">
+                    <img src="1790043173683-cf216fb1-dfd4-490a-8085-411b0ada3876_1.jpg" alt="Scan from Gen Z and Vapes article page 1">
+                </a>
+                <a href="1790043174223-92e75afd-e7bf-44db-be90-036f36742594_1.jpg" target="_blank" rel="noopener noreferrer">
+                    <img src="1790043174223-92e75afd-e7bf-44db-be90-036f36742594_1.jpg" alt="Scan from Gen Z and Vapes article page 2">
+                </a>
+            </div>
+
             <p></p>
             <p></p>
             <p></p>
