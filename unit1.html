@@ -99,10 +99,47 @@
             display: block;
             width: 100%;
             height: auto;
-            cursor: pointer;
+            cursor: zoom-in;
         }
 
         .blog-section p { margin-bottom: 1.5rem; }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: rgb(0 0 0 / 82%);
+            cursor: pointer;
+        }
+
+        .image-modal.is-open { display: flex; }
+
+        .image-modal img {
+            display: block;
+            max-width: 92vw;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            cursor: default;
+            box-shadow: 0 4px 24px rgb(0 0 0 / 45%);
+        }
+
+        .close-modal {
+            position: fixed;
+            top: 0.75rem;
+            right: 1.25rem;
+            border: 0;
+            background: transparent;
+            color: white;
+            font-size: 2.5rem;
+            line-height: 1;
+            cursor: pointer;
+        }
 
         @media (max-width: 650px) {
             .image-row { grid-template-columns: 1fr; }
@@ -128,10 +165,10 @@
             <h3>Blog: Gen Z and Vapes</h3>
 
             <div class="image-row">
-                <a href="1790043173683-cf216fb1-dfd4-490a-8085-411b0ada3876_1.jpg" target="_blank" rel="noopener noreferrer">
+                <a href="1790043173683-cf216fb1-dfd4-490a-8085-411b0ada3876_1.jpg" class="enlarge-image">
                     <img src="1790043173683-cf216fb1-dfd4-490a-8085-411b0ada3876_1.jpg" alt="Scan from Gen Z and Vapes article page 1">
                 </a>
-                <a href="1790043174223-92e75afd-e7bf-44db-be90-036f36742594_1.jpg" target="_blank" rel="noopener noreferrer">
+                <a href="1790043174223-92e75afd-e7bf-44db-be90-036f36742594_1.jpg" class="enlarge-image">
                     <img src="1790043174223-92e75afd-e7bf-44db-be90-036f36742594_1.jpg" alt="Scan from Gen Z and Vapes article page 2">
                 </a>
             </div>
@@ -145,5 +182,45 @@
             </p>
         </section>
     </main>
+
+    <div class="image-modal" id="image-modal" role="dialog" aria-modal="true" aria-label="Enlarged image">
+        <button class="close-modal" type="button" aria-label="Close enlarged image">&times;</button>
+        <img id="enlarged-image" src="" alt="">
+    </div>
+
+    <script>
+        const modal = document.querySelector('#image-modal');
+        const enlargedImage = document.querySelector('#enlarged-image');
+        const closeButton = document.querySelector('.close-modal');
+
+        document.querySelectorAll('.enlarge-image').forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const image = link.querySelector('img');
+                enlargedImage.src = image.src;
+                enlargedImage.alt = image.alt;
+                modal.classList.add('is-open');
+            });
+        });
+
+        function closeImage() {
+            modal.classList.remove('is-open');
+            enlargedImage.src = '';
+        }
+
+        closeButton.addEventListener('click', closeImage);
+
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeImage();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+                closeImage();
+            }
+        });
+    </script>
 </body>
 </html>
